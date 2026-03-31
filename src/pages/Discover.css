@@ -1,57 +1,85 @@
-/* src/pages/Discover.css */
 .discover-page {
-  padding-top: 2rem;
+  padding-top: 1.2rem;
   padding-bottom: 2rem;
 }
 
 .swipe-container {
-  max-width: 440px;
+  max-width: 500px;
   margin: 0 auto;
   position: relative;
   perspective: 1000px;
 }
 
 .swipe-card {
-  transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.4s ease;
+  transition:
+    transform 0.24s cubic-bezier(0.2, 0.8, 0.2, 1),
+    opacity 0.24s ease;
   position: relative;
   overflow: hidden;
-  background-color: var(--surface);
+  background-color: var(--surface-elevated);
   border-radius: var(--radius-lg);
-  padding: 2.5rem !important;
+  padding: 1.2rem !important;
+  box-shadow: var(--shadow-strong);
 }
 
-.swipe-left { transform: translateX(-150%) rotate(-10deg); opacity: 0; }
-.swipe-right { transform: translateX(150%) rotate(10deg); opacity: 0; }
-.swipe-up { transform: translateY(-150%); opacity: 0; }
+.swipe-left {
+  transform: translateX(-150%) rotate(-10deg);
+  opacity: 0;
+}
+.swipe-right {
+  transform: translateX(150%) rotate(10deg);
+  opacity: 0;
+}
 
 .compatibility-badge {
   background-color: var(--primary);
-  color: white;
+  color: #fff;
   padding: 0.4rem 1rem;
   border-radius: var(--radius-full);
   font-weight: 600;
   font-size: 0.9rem;
 }
 
-.text-sm { font-size: 0.875rem; }
-.font-semibold { font-weight: 600; }
-.flex-shrink-0 { flex-shrink: 0; }
-.rounded-md { border-radius: var(--radius-md); }
-.p-4 { padding: 1rem; }
-.leading-relaxed { line-height: 1.6; }
+.candidate-name {
+  margin-bottom: 0.2rem;
+}
+
+.candidate-bio {
+  font-size: 0.84rem;
+  margin-bottom: 0.9rem;
+}
+
+.text-sm {
+  font-size: 0.875rem;
+}
+.font-semibold {
+  font-weight: 600;
+}
+.flex-shrink-0 {
+  flex-shrink: 0;
+}
+.rounded-md {
+  border-radius: var(--radius-md);
+}
+.p-4 {
+  padding: 1rem;
+}
+.leading-relaxed {
+  line-height: 1.6;
+}
 
 .skill-box {
-  padding: 1.25rem 1.5rem;
-  border: 1px solid var(--border);
+  padding: 0.85rem;
+  border: 2px solid var(--stroke);
   border-radius: var(--radius-md);
-  background-color: var(--background);
+  background-color: var(--panel-soft);
   text-align: center;
 }
 
 .skill-title {
   margin-top: 0.5rem;
-  font-size: 1.35rem;
-  color: var(--text-main);
+  font-size: 1.1rem;
+  color: var(--ink);
 }
 
 .offer-box {
@@ -64,24 +92,24 @@
 
 .exchange-icon {
   font-size: 1.75rem;
-  margin: -1rem 0;
+  margin: -0.8rem 0;
   z-index: 10;
-  background: white;
+  background: var(--surface-elevated);
   width: 40px;
   height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  border: 1px solid var(--border);
+  border: 2px solid var(--stroke);
   margin-left: auto;
   margin-right: auto;
   position: relative;
 }
 
 .ai-explanation {
-  background-color: #eff6ff;
-  border: 1px solid #bfdbfe;
+  background-color: var(--info-soft);
+  border: 2px solid var(--info-border);
 }
 .text-primary {
   color: var(--primary);
@@ -94,27 +122,42 @@
 .action-btn {
   width: 68px;
   height: 68px;
-  border-radius: var(--radius-full);
-  background-color: white;
+  border-radius: var(--radius-pill);
+  background-color: var(--surface-elevated);
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 2px solid var(--border);
-  box-shadow: var(--shadow-sm);
+  border: 2px solid var(--stroke);
+  box-shadow: 3px 3px 0 var(--stroke);
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
 }
 
 .action-btn:hover {
-  transform: scale(1.15);
-  box-shadow: var(--shadow-md);
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0 var(--stroke);
 }
 
-.action-btn.skip { color: #ef4444; border-color: #fecaca; }
-.action-btn.skip:hover { background-color: #fef2f2; }
+.action-btn.skip {
+  color: var(--danger);
+  border-color: color-mix(in srgb, var(--danger) 45%, var(--stroke));
+}
+.action-btn.skip:hover {
+  background-color: var(--danger-soft);
+}
 
-.action-btn.save { color: #f59e0b; border-color: #fde68a; width: 56px; height: 56px; margin-top: 6px; }
-.action-btn.save:hover { background-color: #fffbeb; }
+.action-btn.interested {
+  color: var(--success);
+  border-color: color-mix(in srgb, var(--success) 45%, var(--stroke));
+}
+.action-btn.interested:hover {
+  background-color: var(--success-soft);
+}
 
-.action-btn.interested { color: #10b981; border-color: #a7f3d0; }
-.action-btn.interested:hover { background-color: #ecfdf5; }
+.discover-error {
+  color: var(--danger);
+}
+
+.match-why-title {
+  color: var(--primary);
+}

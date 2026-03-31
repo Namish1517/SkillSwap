@@ -1,6 +1,5 @@
-/* src/pages/Dashboard.css */
 .dashboard-page {
-  padding-top: 3rem;
+  padding-top: 1.4rem;
   padding-bottom: 3rem;
 }
 
@@ -13,44 +12,65 @@
 .dashboard-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-  gap: 2rem;
+  gap: 0.8rem;
 }
 
 .stat-icon {
   width: 64px;
   height: 64px;
-  border-radius: var(--radius-full);
+  border-radius: var(--radius-pill);
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+  box-shadow: 3px 3px 0 var(--stroke);
 }
 
-.bg-primary-light { background-color: #dbeafe; }
-.text-primary { color: #1d4ed8; }
+.bg-primary-light {
+  background-color: color-mix(in srgb, var(--primary) 26%, var(--panel));
+}
+.text-primary {
+  color: var(--primary);
+}
 
-.bg-success-light { background-color: #d1fae5; }
-.text-success { color: #10b981; }
+.bg-success-light {
+  background-color: color-mix(in srgb, var(--success) 26%, var(--panel));
+}
+.text-success {
+  color: var(--success);
+}
 
-.bg-warning-light { background-color: #fef3c7; }
-.text-warning { color: #f59e0b; }
+.bg-warning-light {
+  background-color: color-mix(in srgb, var(--warning) 26%, var(--panel));
+}
+.text-warning {
+  color: var(--warning);
+}
 
-.font-normal { font-weight: 400; }
-.rounded-full { border-radius: 9999px; }
-.flex-shrink-0 { flex-shrink: 0; }
-.uppercase { text-transform: uppercase; }
+.font-normal {
+  font-weight: 400;
+}
+.rounded-full {
+  border-radius: 9999px;
+}
+.flex-shrink-0 {
+  flex-shrink: 0;
+}
+.uppercase {
+  text-transform: uppercase;
+}
 
 .progress-bar {
   width: 100%;
   height: 8px;
-  background-color: var(--secondary);
-  border-radius: var(--radius-full);
+  background-color: color-mix(in srgb, var(--panel-soft) 72%, var(--bg));
+  border-radius: var(--radius-pill);
   overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--stroke) 28%, transparent);
 }
 
 .progress-fill {
   height: 100%;
-  border-radius: var(--radius-full);
+  border-radius: var(--radius-pill);
   transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -58,6 +78,20 @@
   display: flex;
   flex-direction: column;
 }
-.pb-2 { padding-bottom: 0.5rem; }
-.pb-5 { padding-bottom: 1.25rem; }
-.border-b { border-bottom: 1px solid var(--border); }
+.pb-2 {
+  padding-bottom: 0.5rem;
+}
+.pb-5 {
+  padding-bottom: 1.25rem;
+}
+.border-b {
+  border-bottom: 1px solid var(--border);
+}
+
+.dashboard-tip {
+  border: 1px solid var(--info-border);
+}
+
+.dashboard-tip-text {
+  color: var(--ink);
+}
