@@ -1,0 +1,32 @@
+.profile-setup {
+  padding-top: 3rem;
+  padding-bottom: 3rem;
+}
+
+.setup-card {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.form-section {
+  margin-bottom: 2rem;
+}
+
+.input-with-button {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.flex-1 {
+  flex: 1;
+}
+
+.form-row {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.w-full {
+  width: 100%;
+}

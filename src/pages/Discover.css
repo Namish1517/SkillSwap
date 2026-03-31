@@ -1,0 +1,120 @@
+/* src/pages/Discover.css */
+.discover-page {
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+}
+
+.swipe-container {
+  max-width: 440px;
+  margin: 0 auto;
+  position: relative;
+  perspective: 1000px;
+}
+
+.swipe-card {
+  transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.4s ease;
+  position: relative;
+  overflow: hidden;
+  background-color: var(--surface);
+  border-radius: var(--radius-lg);
+  padding: 2.5rem !important;
+}
+
+.swipe-left { transform: translateX(-150%) rotate(-10deg); opacity: 0; }
+.swipe-right { transform: translateX(150%) rotate(10deg); opacity: 0; }
+.swipe-up { transform: translateY(-150%); opacity: 0; }
+
+.compatibility-badge {
+  background-color: var(--primary);
+  color: white;
+  padding: 0.4rem 1rem;
+  border-radius: var(--radius-full);
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.text-sm { font-size: 0.875rem; }
+.font-semibold { font-weight: 600; }
+.flex-shrink-0 { flex-shrink: 0; }
+.rounded-md { border-radius: var(--radius-md); }
+.p-4 { padding: 1rem; }
+.leading-relaxed { line-height: 1.6; }
+
+.skill-box {
+  padding: 1.25rem 1.5rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background-color: var(--background);
+  text-align: center;
+}
+
+.skill-title {
+  margin-top: 0.5rem;
+  font-size: 1.35rem;
+  color: var(--text-main);
+}
+
+.offer-box {
+  border-bottom: 4px solid var(--success);
+}
+
+.wanted-box {
+  border-bottom: 4px solid var(--primary);
+}
+
+.exchange-icon {
+  font-size: 1.75rem;
+  margin: -1rem 0;
+  z-index: 10;
+  background: white;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  margin-left: auto;
+  margin-right: auto;
+  position: relative;
+}
+
+.ai-explanation {
+  background-color: #eff6ff;
+  border: 1px solid #bfdbfe;
+}
+.text-primary {
+  color: var(--primary);
+}
+
+.swipe-actions {
+  padding-top: 1rem;
+}
+
+.action-btn {
+  width: 68px;
+  height: 68px;
+  border-radius: var(--radius-full);
+  background-color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--border);
+  box-shadow: var(--shadow-sm);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+}
+
+.action-btn:hover {
+  transform: scale(1.15);
+  box-shadow: var(--shadow-md);
+}
+
+.action-btn.skip { color: #ef4444; border-color: #fecaca; }
+.action-btn.skip:hover { background-color: #fef2f2; }
+
+.action-btn.save { color: #f59e0b; border-color: #fde68a; width: 56px; height: 56px; margin-top: 6px; }
+.action-btn.save:hover { background-color: #fffbeb; }
+
+.action-btn.interested { color: #10b981; border-color: #a7f3d0; }
+.action-btn.interested:hover { background-color: #ecfdf5; }
