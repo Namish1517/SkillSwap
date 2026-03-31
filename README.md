@@ -1,19 +1,41 @@
 # SkillSwap
 
-SkillSwap is a swipe-based skill barter app.
+SkillSwap is a swipe-based skill barter app where users exchange what they can teach for what they want to learn.
 
-Instead of dating, users match to exchange skills. Example: you teach sewing, someone teaches drawing, and a mutual right swipe creates a match so both users can chat and coordinate learning sessions.
+Example: you teach sewing, another user teaches drawing. If both users swipe right, a match is created and chat opens for coordination.
 
-## Quick Start (Start the App in 5 Minutes)
+## Current Project Status
 
-If you only want to run the app quickly, follow this exact order.
+The app is now frontend + Supabase backed and includes:
+
+- Supabase email/password auth (sign in, sign up, sign out)
+- Protected app routes (Discover, Matches, Dashboard, Profile)
+- Auto profile bootstrap after first successful auth
+- Profile editing with teach/learn skills, city, level, and availability
+- Compatibility-ranked discover queue
+- Swipe persistence in Postgres
+- Match creation on mutual right swipe
+- Match list and in-app chat persisted in Postgres
+- Discover fallback mode (partial matches when strict mutual pool is empty)
+- Reset swipes action to repopulate discover cards
+- Light and dark theme toggle with persistence
+- Demo seed data (50 Indian profiles) in schema SQL
+
+## Stack
+
+- React 19
+- Vite 8
+- React Router 7
+- Supabase JS 2
+- Supabase Postgres + Row Level Security
+- Lucide React icons
+
+## Quick Start
 
 1. Install dependencies.
 2. Configure environment variables.
-3. Run the Supabase schema SQL once.
-4. Start the dev server.
-
-Commands:
+3. Apply database schema in Supabase.
+4. Start the app.
 
 ```bash
 npm install
@@ -21,320 +43,142 @@ cp .env.example .env
 npm run dev
 ```
 
-Open the app at http://localhost:5173.
+Default local URL: http://localhost:5173
 
-Important: The app uses Supabase Auth + database. Without valid Supabase values and the schema applied, signup/login and data features will not work.
+## Environment Variables
 
-## What Is Implemented
+Create `.env` from `.env.example` and provide real values.
 
-- Email/password authentication (Supabase Auth)
-- Profile creation and editing
-- Discover feed ordered by compatibility
-- Left/right swipe actions persisted to database
-- Mutual right-swipe match creation
-- Match list and chat messages persisted to database
-- Route protection for authenticated pages
-- Row Level Security policies for app tables
+Required for frontend auth/data:
 
-## Tech Stack
+- `VITE_SUPABASE_URL`
+- `VITE_SUPABASE_ANON_KEY`
 
-- React 19
-- Vite 8
-- React Router 7
-- Supabase JS 2
-- Supabase Postgres + RLS
-- Lucide React icons
+Optional fallback key supported by current client setup:
 
-## Prerequisites
+- `VITE_SUPABASE_PUBLISHABLE_DEFAULT_KEY`
 
-Install these first:
+Optional server/database connection string:
 
-- Node.js 20+ recommended
-- npm 10+ recommended
-- A Supabase project
+- `DATABASE_URL`
 
-Check versions:
-
-```bash
-node -v
-npm -v
-```
-
-## Environment Setup
-
-Create your local environment file:
-
-```bash
-cp .env.example .env
-```
-
-Then fill in .env.
-
-Required frontend keys:
-
-- VITE_SUPABASE_URL
-- VITE_SUPABASE_ANON_KEY
-
-Also supported by the app:
-
-- VITE_SUPABASE_PUBLISHABLE_DEFAULT_KEY
-
-Optional server key in the project template:
-
-- DATABASE_URL
-
-Example format:
+Example:
 
 ```env
 DATABASE_URL=postgresql://postgres:[YOUR-PASSWORD]@db.your-project-ref.supabase.co:5432/postgres
 VITE_SUPABASE_URL=https://your-project-ref.supabase.co
-VITE_SUPABASE_ANON_KEY=your-anon-key
-VITE_SUPABASE_PUBLISHABLE_DEFAULT_KEY=your-publishable-key
+VITE_SUPABASE_ANON_KEY=[YOUR-ANON-KEY]
+VITE_SUPABASE_PUBLISHABLE_DEFAULT_KEY=[YOUR-PUBLISHABLE-KEY]
 ```
 
-Notes:
+## One-Time Supabase Setup
 
-- For frontend code, always use VITE_SUPABASE_URL in the https://project-ref.supabase.co format.
-- The Postgres host format db.project-ref.supabase.co is for database connections, not for the frontend Supabase client URL.
+1. In Supabase Auth providers, enable Email.
+2. Run `supabase/schema.sql` in Supabase SQL Editor.
+3. Confirm tables exist: `profiles`, `swipes`, `matches`, `messages`.
+4. Confirm RLS policies were created.
 
-## Supabase Project Setup (One-Time)
+The schema also seeds demo discover records for development.
 
-### 1) Enable email/password auth
+## Scripts
 
-In Supabase dashboard:
+- `npm run dev` starts local dev server
+- `npm run build` creates production build
+- `npm run preview` serves production build locally
+- `npm run lint` runs ESLint
 
-1. Go to Authentication.
-2. Open Providers.
-3. Enable Email provider.
-4. Choose whether email confirmation is required.
+## Implemented Product Flow
 
-### 2) Apply database schema
+1. User signs in or signs up on Landing.
+2. App initializes auth session and protects internal routes.
+3. App ensures a profile row exists for authenticated user.
+4. User edits profile and skills in Profile Setup.
+5. Discover shows ranked cards and stores swipe actions.
+6. Mutual right swipe creates match.
+7. Matches page loads conversations and sends messages.
+8. Dashboard summarizes activity from live app data.
 
-Run the SQL file in Supabase SQL Editor:
+## Compatibility Logic (Current)
 
-- supabase/schema.sql
+For each discover candidate:
 
-This creates:
+- `+2` per overlap where candidate teaches what current user wants
+- `+2` per overlap where candidate wants what current user teaches
+- `+1` same city
+- `+1` same level
 
-- profiles
-- swipes
-- matches
-- messages
-- indexes
-- RLS policies
-- demo profile seed rows
+Queue behavior:
 
-### 3) Verify RLS behavior
+- Priority 1: strict mutual matches (both overlap directions)
+- Priority 2: partial matches if strict queue is exhausted
 
-The schema includes policies so:
+## Data Model (Current)
 
-- users can update only their profile
-- users can insert/select their own swipes
-- users can read matches they are part of
-- users can send/read messages only in their matches
+`profiles`
 
-## Start the App
-
-Development server:
-
-```bash
-npm run dev
-```
-
-Production build:
-
-```bash
-npm run build
-```
-
-Preview production build locally:
-
-```bash
-npm run preview
-```
-
-Lint:
-
-```bash
-npm run lint
-```
-
-## App Flow
-
-### Authentication flow
-
-1. User signs up or signs in on the landing page.
-2. Auth session is loaded and tracked by AuthContext.
-3. Protected routes redirect unauthenticated users to landing.
-
-### Profile flow
-
-1. On first login, a profile row is created automatically.
-2. User updates name, bio, city, level, availability, skills.
-3. Changes persist to profiles and refresh app state.
-
-### Discover flow
-
-1. Candidate profiles are fetched from database.
-2. Compatibility is computed using mutual teach/learn overlap.
-3. User swipes left or right and swipe is saved.
-4. If a mutual right is detected, a match is created.
-
-### Matches + chat flow
-
-1. Matches involving current user are fetched.
-2. Messages for those matches are fetched and grouped.
-3. Sending a message writes to messages table.
-
-## Project Structure
-
-```text
-SkillSwap/
-	src/
-		context/
-			AuthContext.jsx
-			SkillSwapContext.jsx
-		lib/
-			supabase.js
-		pages/
-			LandingPage.jsx
-			ProfileSetup.jsx
-			Discover.jsx
-			Matches.jsx
-			Dashboard.jsx
-		App.jsx
-		main.jsx
-	supabase/
-		schema.sql
-	.env.example
-	package.json
-```
-
-## Core Files Explained
-
-- src/lib/supabase.js
-  - Initializes Supabase client using VITE environment values.
-- src/context/AuthContext.jsx
-  - Handles session boot, auth state updates, signin/signup/signout.
-- src/context/SkillSwapContext.jsx
-  - Handles profile bootstrap, discover queue, swipes, matches, messages.
-- supabase/schema.sql
-  - Creates tables, indexes, trigger, and RLS policies.
-
-## Compatibility Logic
-
-Current scoring model in app state:
-
-- +2 per teach overlap (candidate teaches what I want)
-- +2 per learn overlap (candidate wants what I teach)
-- +1 city match
-- +1 level match
-
-Then score is converted to a visible percentage and cards are sorted descending.
-
-## Data Model Summary
-
-### profiles
-
-- id
-- auth_user_id
-- email
-- name
-- bio
-- city
-- level
-- availability
-- teach_skills text[]
-- learn_skills text[]
-- likes_you boolean
-- is_demo boolean
+- `id` UUID PK
+- `auth_user_id` UUID unique (linked to `auth.users`)
+- `email`, `name`, `bio`, `city`, `level`, `availability`
+- `teach_skills` text[]
+- `learn_skills` text[]
+- `likes_you` boolean
+- `is_demo` boolean
 - timestamps
 
-### swipes
+`swipes`
 
-- swiper_profile_id
-- target_profile_id
-- action left/right
+- `swiper_profile_id`, `target_profile_id`
+- `action` in `left | right`
 - unique pair constraint
 
-### matches
+`matches`
 
-- profile_a_id
-- profile_b_id
-- status
-- agreement
+- `profile_a_id`, `profile_b_id`
+- `status` in `Active | Pending | Completed | Archived`
+- `agreement`, `created_at`
 
-### messages
+`messages`
 
-- match_id
-- sender_profile_id
-- body
-- created_at
+- `match_id`, `sender_profile_id`, `body`, `created_at`
+
+## Security and Access
+
+RLS is enabled on all app tables.
+
+- Users can update only their own profile.
+- Users can insert/select only their own swipes.
+- Users can read matches they participate in.
+- Users can insert/select messages only within their matches.
+
+## Known Gaps (Not Implemented Yet)
+
+- Realtime subscriptions for message updates
+- Report/block safety workflow
+- Dedicated scheduling/session booking
+- Automated tests
+- Admin moderation tools
 
 ## Troubleshooting
 
-### 1) App opens but auth buttons fail
+Auth does not work:
 
-Check:
+- Check `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY`
+- Restart `npm run dev` after editing `.env`
+- Ensure Supabase Email auth provider is enabled
 
-- .env exists
-- VITE_SUPABASE_URL is valid
-- VITE_SUPABASE_ANON_KEY is valid
-- Restart dev server after changing env
+Discover is empty:
 
-### 2) Signup works but no profile/matches appear
+- Ensure schema seed was executed
+- Update profile skills for better overlap
+- Use the Reset Swipes button in Discover
 
-Check:
+Chat or matches not loading:
 
-- supabase/schema.sql was executed successfully
-- RLS policies were created
-- tables exist under public schema
-
-### 3) No discover cards
-
-Possible reasons:
-
-- no compatible profiles in database
-- only your own profile exists
-- swipes already consumed available cards
-
-Fix:
-
-- keep demo rows from schema
-- create another user account and profile
-- adjust teach/learn skills for overlap
-
-### 4) Build works but runtime errors in browser
-
-Check browser console and network tab for:
-
-- invalid Supabase URL
-- auth provider disabled
-- RLS policy rejections
+- Verify schema and RLS policies were applied
+- Verify authenticated user has a profile row
 
 ## Security Notes
 
-- Never commit real secrets.
-- Keep .env local only.
-- Use least-privilege keys for frontend.
-- Keep service-role keys server-side only.
-- Rotate credentials if they were exposed accidentally.
-
-## Recommended Next Improvements
-
-1. Add Supabase Realtime subscriptions for messages and matches.
-2. Add onboarding guard requiring minimum profile completion before discover.
-3. Add report/block tables and policy rules.
-4. Add pagination/infinite loading for discover queue.
-5. Add integration tests for auth and match creation flow.
-
-## Scripts Reference
-
-- npm run dev: start local dev server
-- npm run build: production build
-- npm run preview: preview built app
-- npm run lint: run ESLint
-
-## License
-
-This project currently has no explicit license file. Add one before public distribution.
+- Do not commit real credentials in `.env`.
+- Frontend must only use public/anon keys.
+- Rotate exposed keys immediately.
