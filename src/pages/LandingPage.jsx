@@ -177,7 +177,7 @@ const LandingPage = () => {
             </div>
             <h3>1. Setup Profile</h3>
             <p className="text-muted mt-2">
-              Define what you can teach and what you want to learn. This powers
+              Define the skills you can teach and the skills you want to learn.
               compatibility.
             </p>
           </div>

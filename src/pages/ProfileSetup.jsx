@@ -9,7 +9,7 @@ const RECOMMENDED_SKILLS = [
   "Illustration",
   "Embroidery",
   "Pattern Cutting",
-  "Storyboarding",
+  "Photography",
 ];
 
 const ProfileSetup = () => {
@@ -120,7 +120,15 @@ const ProfileSetup = () => {
               rows={3}
               value={bio}
               onChange={(e) => setBio(e.target.value)}
-              placeholder="What can you teach and what are you excited to learn?"
+              Skills
+              I
+              can
+              teach
+              and
+              skills
+              I
+              need
+              
             />
           </div>
 
@@ -158,7 +166,7 @@ const ProfileSetup = () => {
 
           <div className="form-section">
             <label className="input-label mb-2" style={{ display: "block" }}>
-              Skills You Want to Learn
+              Skills You Need
             </label>
             <div className="chip-group mb-4">
               {wantedSkills.map((skill) => (
@@ -199,13 +207,13 @@ const ProfileSetup = () => {
                       type="button"
                       onClick={() => handleQuickAdd(skill, "teach")}
                     >
-                      Teach
+                      Offer
                     </button>
                     <button
                       type="button"
                       onClick={() => handleQuickAdd(skill, "learn")}
                     >
-                      Learn
+                      Want
                     </button>
                   </div>
                 </div>
