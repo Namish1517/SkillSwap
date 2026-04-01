@@ -370,7 +370,7 @@ export const SkillSwapProvider = ({ children }) => {
       profile_a_id: profileA,
       profile_b_id: profileB,
       status: "Active",
-      agreement: `${candidate.compatibility.teachOverlap[0]} <-> ${candidate.compatibility.learnOverlap[0]}`,
+      agreement: `${candidate.compatibility.teachOverlap[0] || candidate.teachSkills[0] || "a skill"} <-> ${candidate.compatibility.learnOverlap[0] || candidate.learnSkills[0] || "a skill"}`,
     });
 
     if (matchError) {
