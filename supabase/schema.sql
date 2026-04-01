@@ -54,6 +54,10 @@ create index if not exists idx_matches_profile_a on public.matches (profile_a_id
 create index if not exists idx_matches_profile_b on public.matches (profile_b_id);
 create index if not exists idx_messages_match_created on public.messages (match_id, created_at desc);
 
+-- Enable Supabase Realtime for the messages table so clients receive
+-- live INSERT events via postgres_changes subscriptions.
+alter publication supabase_realtime add table public.messages;
+
 create or replace function public.touch_updated_at()
 returns trigger
 language plpgsql

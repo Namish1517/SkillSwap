@@ -14,5 +14,10 @@ export const supabase = hasSupabaseEnv
         autoRefreshToken: true,
         detectSessionInUrl: true,
       },
+      realtime: {
+        params: {
+          eventsPerSecond: 10,
+        },
+      },
     })
   : null;

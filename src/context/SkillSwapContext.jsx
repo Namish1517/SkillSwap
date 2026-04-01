@@ -3,6 +3,7 @@ import React, {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from "react";
 import { useAuth } from "./AuthContext";
@@ -97,10 +98,13 @@ export const SkillSwapProvider = ({ children }) => {
     return map;
   }, [swipes]);
 
-  const hydrateMessages = (messageRows, profileMap) => {
+  // Takes the current user's profile id explicitly so we never read stale
+  // React state (which would be null on first load and misattribute all
+  // messages as coming from the partner).
+  const hydrateMessages = (messageRows, profileMap, currentProfileId) => {
     return messageRows.reduce((acc, row) => {
       const sender =
-        row.sender_profile_id === myProfileId
+        row.sender_profile_id === currentProfileId
           ? "You"
           : profileMap[row.sender_profile_id]?.name || "Partner";
       if (!acc[row.match_id]) acc[row.match_id] = [];
@@ -171,6 +175,7 @@ export const SkillSwapProvider = ({ children }) => {
     try {
       const myProfile = await ensureProfile();
       setMyProfileId(myProfile.id);
+      myProfileIdRef.current = myProfile.id;
       setCurrentUser({
         id: myProfile.id,
         name: myProfile.name,
@@ -207,6 +212,8 @@ export const SkillSwapProvider = ({ children }) => {
         }),
         { [myProfile.id]: myProfile },
       );
+      // Keep ref in sync so the realtime handler always has fresh names.
+      profileMapRef.current = profileMap;
 
       setCandidateProfiles(profileRows);
       setSwipes(swipesRes.data || []);
@@ -239,7 +246,9 @@ export const SkillSwapProvider = ({ children }) => {
           .order("created_at", { ascending: true });
 
         if (messageError) throw messageError;
-        setMessagesByMatch(hydrateMessages(messageRows || [], profileMap));
+        // Pass myProfile.id directly — React state (myProfileId) is still the
+        // previous value at this point in the render cycle.
+        setMessagesByMatch(hydrateMessages(messageRows || [], profileMap, myProfile.id));
       }
     } catch (err) {
       setError(err.message || "Failed to load SkillSwap data.");
@@ -248,9 +257,57 @@ export const SkillSwapProvider = ({ children }) => {
     }
   };
 
+  // Keep a ref to the current profileMap so the realtime handler can look up
+  // sender names without capturing stale closures.
+  const profileMapRef = useRef({});
+  const myProfileIdRef = useRef(null);
+
   useEffect(() => {
     loadFromDatabase();
   }, [user?.id]);
+
+  // Supabase Realtime subscription — listens for new messages in any match
+  // that belongs to the current user and appends them to local state so the
+  // other participant's messages appear instantly without a reload.
+  useEffect(() => {
+    if (!useDatabase) return;
+
+    const channel = supabase
+      .channel("messages-realtime")
+      .on(
+        "postgres_changes",
+        { event: "INSERT", schema: "public", table: "messages" },
+        (payload) => {
+          const row = payload.new;
+          const profileId = myProfileIdRef.current;
+          // Ignore messages we inserted ourselves (already added optimistically)
+          if (row.sender_profile_id === profileId) return;
+
+          const senderName =
+            profileMapRef.current[row.sender_profile_id]?.name || "Partner";
+
+          setMessagesByMatch((prev) => {
+            const existing = prev[row.match_id] || [];
+            return {
+              ...prev,
+              [row.match_id]: [
+                ...existing,
+                {
+                  sender: senderName,
+                  text: row.body,
+                  createdAt: row.created_at,
+                },
+              ],
+            };
+          });
+        },
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [useDatabase]);
 
   const discoverQueue = useMemo(() => {
     const candidates = candidateProfiles
