@@ -120,15 +120,7 @@ const ProfileSetup = () => {
               rows={3}
               value={bio}
               onChange={(e) => setBio(e.target.value)}
-              Skills
-              I
-              can
-              teach
-              and
-              skills
-              I
-              need
-              
+              placeholder="Skills I can teach and skills I want to learn"
             />
           </div>
 

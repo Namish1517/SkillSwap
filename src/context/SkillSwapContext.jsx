@@ -300,6 +300,7 @@ export const SkillSwapProvider = ({ children }) => {
 
     setSwipes([]);
     await loadFromDatabase();
+    setError("");
   };
 
   const performSwipe = async (targetId, action) => {
